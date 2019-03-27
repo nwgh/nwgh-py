@@ -32,12 +32,16 @@ def main(_main):
     parent = inspect.stack()[1][0]
     name = parent.f_locals.get('__name__', None)
     if name == '__main__':
-        rval = 1
+        rval = None
 
         try:
             rval = _main(sys.argv[1:])
+            if rval is None:
+                # Assume a None return is success
+                rval = 0
         except Exception as e:
             warn(str(e))
+            rval = 1
 
         sys.exit(rval)
     return _main
