@@ -40,7 +40,34 @@ def main(_main):
                 # Assume a None return is success
                 rval = 0
         except Exception as e:
-            warn(str(e))
+            if os.getenv('NWGH_NO_PYTB', None):
+                warn(str(e))
+            else:
+                etype, evalue, etb = sys.exc_info()
+                traceback.print_exception(etype, evalue, etb)
+            rval = 1
+
+        sys.exit(rval)
+    return _main
+
+
+def cmain(_main):
+    """Decorator to mark a function as the main function for a program using click.
+    """
+    parent = inspect.stack()[1][0]
+    name = parent.f_locals.get('__name__', None)
+    if name == '__main__':
+        rval = None
+        try:
+            rval = _main()
+            if rval is None:
+                rval = 0
+        except Exception as e:
+            if os.getenv('NWGH_NO_PYTB', None):
+                warn(str(e))
+            else:
+                etype, evalue, etb = sys.exc_info()
+                traceback.print_exception(etype, evalue, etb)
             rval = 1
 
         sys.exit(rval)
