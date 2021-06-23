@@ -4,7 +4,7 @@ with open("README.md") as f:
     longdesc = f.read()
 
 setuptools.setup(
-    name="nwgh-py",
+    name="nwgh",
     version="0.0.1",
     author="Nicholas Hurley",
     author_email="nwgh@nwgh.org",
